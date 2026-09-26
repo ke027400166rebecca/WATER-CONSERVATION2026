@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Importance | AquaGuard Kenya</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- SHARED VARIABLES (Matches Other Pages) --- */
+        :root {
+            --primary: #0077b6;
+            --primary-dark: #023e8a;
+            --secondary: #00b4d8;
+            --accent: #90e0ef;
+            --highlight: #caf0f8;
+            --text-dark: #2b2d42;
+            --text-light: #f8f9fa;
+            --bg-light: #f0f8ff;
+            --shadow: 0 10px 30px rgba(0, 119, 182, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; color: var(--primary-dark); }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- HEADER (Same as Other Pages) --- */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 0.8rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i { color: var(--secondary); }
+
+        .nav-links { display: flex; gap: 25px; }
+        .nav-links a {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            position: relative;
+            transition: var(--transition);
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--secondary);
+            transition: var(--transition);
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a:hover::after { width: 100%; }
+        .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); }
+
+        /* --- PAGE HERO --- */
+        .page-hero {
+            background: linear-gradient(135deg, rgba(2, 62, 138, 0.9), rgba(0, 180, 216, 0.8)), 
+                        url('https://images.unsplash.com/photo-1542013936693-884638332954?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .page-hero h1 { font-size: 3rem; color: var(--text-light); margin-bottom: 10px; }
+        .page-hero p { font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+        /* --- MAIN CONTENT WRAPPER --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
+
+        /* --- KEY REASONS GRID --- */
+        .reasons-section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .reason-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            border-bottom: 4px solid transparent;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .reason-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reason-card:hover {
+            transform: translateY(-10px);
+            border-bottom: 4px solid var(--secondary);
+        }
+
+        .reason-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        .reason-card h3 { margin-bottom: 15px; }
+
+        /* --- IMPACT STATISTICS --- */
+        .stats-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text-light);
+            padding: 60px 20px;
+            border-radius: 20px;
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* --- CONSEQUENCES SECTION --- */
+        .consequences-section {
+            margin-bottom: 80px;
+        }
+
+        .consequences-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .consequence-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid #c8102e; /* Red accent for urgency */
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: var(--transition);
+        }
+
+        .consequence-card.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .consequence-card h3 {
+            color: #c8102e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- CALL TO ACTION --- */
+        .cta-section {
+            background: white;
+            padding: 60px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-main {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--text-light);
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            background: var(--primary-dark);
+        }
+
+        /* --- FOOTER (Same as Other Pages) --- */
+        footer {
+            background: var(--text-dark);
+            color: var(--text-light);
+            padding: 60px 20px 20px;
+            margin-top: 80px;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-col h4 { color: var(--accent); margin-bottom: 20px; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a:hover { color: var(--secondary); padding-left: 5px; transition: var(--transition); }
+        .social-links a {
+            display: inline-flex; justify-content: center; align-items: center;
+            width: 40px; height: 40px; background: rgba(255,255,255,0.1);
+            border-radius: 50%; margin-right: 10px; transition: var(--transition);
+        }
+        .social-links a:hover { background: var(--secondary); transform: rotate(360deg); }
+        .copyright { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 0.9rem; opacity: 0.7; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: block; }
+            .nav-links {
+                position: absolute; top: 70px; left: 0; width: 100%;
+                background: white; flex-direction: column; padding: 20px;
+                box-shadow: 0 10px 10px rgba(0,0,0,0.05); display: none;
+            }
+            .nav-links.active { display: flex; }
+            .page-hero h1 { font-size: 2.2rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-tint"></i> AquaGuard Kenya
+            </a>
+            <div class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="importance.html" style="color:var(--primary);">Importance</a></li>
+                    <li><a href="Ways to save.html">Ways</a></li>
+                    <li><a href="quiz.html">Quiz</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <h1>Why Water Conservation Matters</h1>
+        <p>Understanding the critical importance of preserving our most precious resource.</p>
+    </section>
+
+    <div class="container">
+        
+        <!-- Key Reasons Section -->
+        <section class="reasons-section">
+            <div class="section-title">
+                <h2>Key Reasons to Conserve Water</h2>
+                <p>Water is not just a resource; it's the foundation of life, economy, and ecosystem health.</p>
+            </div>
+            <div class="reasons-grid">
+                <div class="reason-card scroll-animate">
+                    <i class="fas fa-heartbeat reason-icon"></i>
+                    <h3>Human Health & Survival</h3>
+                    <p>Clean water is essential for drinking, sanitation, and hygiene. Conserving water ensures access to safe water for all communities, preventing waterborne diseases.</p>
+                </div>
+                <div class="reason-card scroll-animate">
+                    <i class="fas fa-seedling reason-icon"></i>
+                    <h3>Food Security</h3>
+                    <p>Agriculture consumes 70% of global freshwater. Efficient water use in farming is crucial for feeding Kenya's growing population and ensuring food security.</p>
+                </div>
+                <div class="reason-card scroll-animate">
+                    <i class="fas fa-industry reason-icon"></i>
+                    <h3>Economic Growth</h3>
+                    <p>Industries rely on water for production. Water scarcity can halt economic activities, affect jobs, and hinder Kenya's development goals.</p>
+                </div>
+                <div class="reason-card scroll-animate">
+                    <i class="fas fa-paw reason-icon"></i>
+                    <h3>Ecosystem Balance</h3>
+                    <p>Rivers, lakes, and wetlands support diverse wildlife. Conserving water protects these habitats and maintains biodiversity across Kenya.</p>
+                </div>
+                <div class="reason-card scroll-animate">
+                    <i class="fas fa-cloud-showers-heavy reason-icon"></i>
+                    <h3>Climate Resilience</h3>
+                    <p>With changing climate patterns, droughts are becoming more frequent. Water conservation builds resilience against climate shocks and ensures water availability during dry periods.</p>
+                </div>
+                <div class="reason-card scroll-animate">
+                    <i class="fas fa-users reason-icon"></i>
+                    <h3>Social Equity</h3>
+                    <p>Water scarcity disproportionately affects women and children who often bear the burden of fetching water. Conservation promotes gender equality and social justice.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact Statistics -->
+        <section class="stats-section">
+            <div class="section-title">
+                <h2 style="color: var(--text-light);">The Global & Local Impact</h2>
+                <p style="opacity: 0.9;">Understanding the scale of the water challenge</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>2.2B</h3>
+                    <p>People globally lack safely managed drinking water</p>
+                </div>
+                <div class="stat-item">
+                    <h3>40%</h3>
+                    <p>Of Kenyans face water scarcity issues regularly</p>
+                </div>
+                <div class="stat-item">
+                    <h3>70%</h3>
+                    <p>Of global freshwater is used for agriculture</p>
+                </div>
+                <div class="stat-item">
+                    <h3>30%</h3>
+                    <p>Water loss through leaks in urban systems</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Consequences Section -->
+        <section class="consequences-section">
+            <div class="section-title">
+                <h2>What Happens If We Don't Act?</h2>
+                <p>The consequences of water wastage are severe and far-reaching.</p>
+            </div>
+            <div class="consequences-grid">
+                <div class="consequence-card scroll-animate">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Increased Conflicts</h3>
+                    <p>Water scarcity can lead to conflicts between communities, regions, and even countries over limited water resources.</p>
+                </div>
+                <div class="consequence-card scroll-animate">
+                    <h3><i class="fas fa-chart-line-down"></i> Economic Decline</h3>
+                    <p>Industries shut down, agricultural productivity drops, and unemployment rises when water becomes scarce.</p>
+                </div>
+                <div class="consequence-card scroll-animate">
+                    <h3><i class="fas fa-hospital-user"></i> Health Crises</h3>
+                    <p>Lack of clean water leads to increased waterborne diseases, putting strain on healthcare systems and affecting quality of life.</p>
+                </div>
+                <div class="consequence-card scroll-animate">
+                    <h3><i class="fas fa-tree"></i> Environmental Degradation</h3>
+                    <p>Ecosystems collapse, wildlife dies, and landscapes become barren when water sources dry up.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <h2>Be Part of the Solution</h2>
+            <p>Every drop counts! By conserving water today, you're securing a better tomorrow for Kenya and future generations. Start with small changes in your daily routine.</p>
+            <a href="Ways to save.html" class="btn-main">Learn How to Save Water <i class="fas fa-arrow-right"></i></a>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>AquaGuard Kenya</h4>
+                <p>Student-led initiative dedicated to creating a water-secure future for all Kenyan communities through education and action.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="importance.html">Importance</a></li>
+                    <li><a href="ways.html">Conservation Tips</a></li>
+                    <li><a href="quiz.html">Take the Quiz</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+    
+        </div>
+        <div class="copyright">
+            <p>&copy; <span id="year"></span> AquaGuard Kenya | Created by Rebecca </p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // 1. Dynamic Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 2. Mobile Menu Toggle
+        function toggleMenu() {
+            const nav = document.getElementById('navLinks');
+            nav.classList.toggle('active');
+        }
+
+        // 3. Scroll Animation (Intersection Observer)
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-animate').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

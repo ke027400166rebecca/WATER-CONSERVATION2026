@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ways to Save | AquaGuard Kenya</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- SHARED VARIABLES --- */
+        :root {
+            --primary: #0077b6;
+            --primary-dark: #023e8a;
+            --secondary: #00b4d8;
+            --accent: #90e0ef;
+            --highlight: #caf0f8;
+            --text-dark: #2b2d42;
+            --text-light: #f8f9fa;
+            --bg-light: #f0f8ff;
+            --shadow: 0 10px 30px rgba(0, 119, 182, 0.15);
+            --transition: all 0.3s ease;
+            --success: #2a9d8f;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; color: var(--primary-dark); }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- HEADER --- */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 0.8rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i { color: var(--secondary); }
+
+        .nav-links { display: flex; gap: 25px; }
+        .nav-links a {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            position: relative;
+            transition: var(--transition);
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--secondary);
+            transition: var(--transition);
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a:hover::after { width: 100%; }
+        .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); }
+
+        /* --- PAGE HERO --- */
+        .page-hero {
+            background: linear-gradient(135deg, rgba(2, 62, 138, 0.9), rgba(0, 180, 216, 0.8)), 
+                        url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .page-hero h1 { font-size: 3rem; color: var(--text-light); margin-bottom: 10px; }
+        .page-hero p { font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+        /* --- MAIN CONTENT --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* --- TIPS GRID --- */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .tip-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .tip-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tip-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .tip-header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .tip-header i { font-size: 2.5rem; margin-bottom: 10px; }
+        .tip-header h3 { font-size: 1.5rem; margin: 0; color: white; }
+
+        .tip-body {
+            padding: 25px;
+        }
+
+        .tip-body ul {
+            list-style: none;
+        }
+
+        .tip-body li {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+            color: #555;
+        }
+
+        .tip-body li::before {
+            content: '\f00c'; /* FontAwesome Check */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--success);
+            position: absolute;
+            left: 0;
+            top: 2px;
+        }
+
+        /* --- INTERACTIVE CHECKLIST SECTION --- */
+        .checklist-section {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .checklist-content h2 { font-size: 2.2rem; margin-bottom: 20px; }
+        .checklist-content p { margin-bottom: 30px; color: #666; }
+
+        .custom-checklist {
+            background: var(--bg-light);
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .check-item:hover { background: white; }
+
+        .check-item input {
+            display: none;
+        }
+
+        .checkmark {
+            width: 25px;
+            height: 25px;
+            border: 2px solid var(--primary);
+            border-radius: 5px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .check-item input:checked + .checkmark {
+            background: var(--primary);
+        }
+
+        .check-item input:checked + .checkmark::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .check-item input:checked ~ span {
+            text-decoration: line-through;
+            color: #aaa;
+        }
+
+        /* --- RAINWATER HARVESTING INFO --- */
+        .harvest-section {
+            background: linear-gradient(to right, var(--highlight), white);
+            padding: 60px;
+            border-radius: 20px;
+            margin-bottom: 80px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .harvest-text { flex: 1; }
+        .harvest-img { 
+            flex: 1; 
+            height: 300px; 
+            background-image: url('https://images.unsplash.com/photo-1595246140625-573b715d11dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--text-dark);
+            color: var(--text-light);
+            padding: 60px 20px 20px;
+            margin-top: 80px;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-col h4 { color: var(--accent); margin-bottom: 20px; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a:hover { color: var(--secondary); padding-left: 5px; transition: var(--transition); }
+        .social-links a {
+            display: inline-flex; justify-content: center; align-items: center;
+            width: 40px; height: 40px; background: rgba(255,255,255,0.1);
+            border-radius: 50%; margin-right: 10px; transition: var(--transition);
+        }
+        .social-links a:hover { background: var(--secondary); transform: rotate(360deg); }
+        .copyright { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 0.9rem; opacity: 0.7; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: block; }
+            .nav-links {
+                position: absolute; top: 70px; left: 0; width: 100%;
+                background: white; flex-direction: column; padding: 20px;
+                box-shadow: 0 10px 10px rgba(0,0,0,0.05); display: none;
+            }
+            .nav-links.active { display: flex; }
+            .page-hero h1 { font-size: 2.2rem; }
+            .checklist-section, .harvest-section { grid-template-columns: 1fr; flex-direction: column; }
+            .harvest-img { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-tint"></i> AquaGuard Kenya
+            </a>
+            <div class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="importance.html">Importance</a></li>
+                    <li><a href="ways.html" style="color:var(--primary);">Ways to Save</a></li>
+                    <li><a href="quiz.html">Quiz</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <h1>Practical Ways to Save Water</h1>
+        <p>Simple actions you can take today at home, school, and in the community.</p>
+    </section>
+
+    <div class="container">
+        
+        <!-- Tips Grid -->
+        <section class="tips-section">
+            <div class="section-title">
+                <h2>Where Can You Save?</h2>
+                <p>Small changes in your daily routine make a huge difference.</p>
+            </div>
+            <div class="tips-grid">
+                <!-- Home Card -->
+                <div class="tip-card scroll-animate">
+                    <div class="tip-header">
+                        <i class="fas fa-home"></i>
+                        <h3>At Home</h3>
+                    </div>
+                    <div class="tip-body">
+                        <ul>
+                            <li>Turn off the tap while brushing teeth (saves 6L/min).</li>
+                            <li>Fix leaking taps immediately.</li>
+                            <li>Take shorter showers (5 minutes or less).</li>
+                            <li>Use a bucket instead of a hose to wash cars.</li>
+                            <li>Only run washing machines with full loads.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- School Card -->
+                <div class="tip-card scroll-animate">
+                    <div class="tip-header">
+                        <i class="fas fa-school"></i>
+                        <h3>At School</h3>
+                    </div>
+                    <div class="tip-body">
+                        <ul>
+                            <li>Report broken pipes to the administration.</li>
+                            <li>Don't play with water taps during break time.</li>
+                            <li>Start a "Water Monitor" club in your class.</li>
+                            <li>Use leftover water from bottles to water school plants.</li>
+                            <li>Educate younger students about conservation.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Community Card -->
+                <div class="tip-card scroll-animate">
+                    <div class="tip-header">
+                        <i class="fas fa-users"></i>
+                        <h3>In Community</h3>
+                    </div>
+                    <div class="tip-body">
+                        <ul>
+                            <li>Install rainwater harvesting tanks.</li>
+                            <li>Protect water sources from pollution.</li>
+                            <li>Teach neighbors about fixing leaks.</li>
+                            <li>Participate in local river cleanup drives.</li>
+                            <li>Use drip irrigation for kitchen gardens.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Checklist -->
+        <section class="checklist-section">
+            <div class="checklist-content">
+                <h2>Make a Promise Today</h2>
+                <p>Conservation starts with commitment. Check the boxes below for actions you promise to take this week. See how many you can complete!</p>
+                <div style="background: var(--highlight); padding: 15px; border-radius: 8px; border-left: 4px solid var(--primary);">
+                    <strong><i class="fas fa-lightbulb"></i> Did You Know?</strong>
+                    <p style="margin: 5px 0 0 0; font-size: 0.9rem;">A dripping tap can waste over 20 liters of water a day. That's enough for 40 cups of tea!</p>
+                </div>
+            </div>
+            <div class="custom-checklist">
+                <label class="check-item">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                    <span>I will turn off the tap while brushing my teeth.</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                    <span>I will report any leaks I see at home or school.</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                    <span>I will take a 5-minute shower today.</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                    <span>I will use a bowl to wash vegetables, not running water.</span>
+                </label>
+                <label class="check-item">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                    <span>I will tell one friend about water conservation.</span>
+                </label>
+            </div>
+        </section>
+
+        <!-- Rainwater Harvesting Feature -->
+        <section class="harvest-section">
+            <div class="harvest-text">
+                <h2>The Power of Rainwater Harvesting</h2>
+                <p>In Kenya, rain is a gift we cannot waste. Collecting rainwater from roofs is one of the most effective ways to ensure water security during dry seasons.</p>
+                <ul style="margin-top: 20px; list-style: disc; padding-left: 20px; color: #555;">
+                    <li><strong>Cost Effective:</strong> Reduces water bills significantly.</li>
+                    <li><strong>Clean Water:</strong> Provides soft water ideal for washing and gardening.</li>
+                    <li><strong>Flood Control:</strong> Reduces runoff and soil erosion during heavy rains.</li>
+                </ul>
+                <br>
+                <a href="#" style="color: var(--primary); font-weight: 700; text-decoration: underline;">Learn how to build a simple filter &rarr;</a>
+            </div>
+            <div class="harvest-img"></div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>AquaGuard Kenya</h4>
+                <p>Student-led initiative dedicated to creating a water-secure future for all Kenyan communities through education and action.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="importance.html">Importance</a></li>
+                    <li><a href="ways.html">Ways to Save</a></li>
+                    <li><a href="quiz.html">Take the Quiz</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; <span id="year"></span> AquaGuard Kenya |  Created by Rebecca </p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // 1. Dynamic Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 2. Mobile Menu Toggle
+        function toggleMenu() {
+            const nav = document.getElementById('navLinks');
+            nav.classList.toggle('active');
+        }
+
+        // 3. Scroll Animation (Intersection Observer)
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-animate').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 4. Checklist Interaction
+        const checkboxes = document.querySelectorAll('.check-item input');
+        checkboxes.forEach(box => {
+            box.addEventListener('change', function() {
+                if(this.checked) {
+                    console.log("Promise made!");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

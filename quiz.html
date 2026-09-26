@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Quiz | AquaGuard Kenya</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- SHARED VARIABLES --- */
+        :root {
+            --primary: #0077b6;
+            --primary-dark: #023e8a;
+            --secondary: #00b4d8;
+            --accent: #90e0ef;
+            --highlight: #caf0f8;
+            --text-dark: #2b2d42;
+            --text-light: #f8f9fa;
+            --bg-light: #f0f8ff;
+            --shadow: 0 10px 30px rgba(0, 119, 182, 0.15);
+            --transition: all 0.3s ease;
+            --success: #2a9d8f;
+            --error: #e76f51;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; color: var(--primary-dark); }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- HEADER --- */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 0.8rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i { color: var(--secondary); }
+
+        .nav-links { display: flex; gap: 25px; }
+        .nav-links a {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            position: relative;
+            transition: var(--transition);
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--secondary);
+            transition: var(--transition);
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a:hover::after { width: 100%; }
+        .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); }
+
+        /* --- PAGE HERO --- */
+        .page-hero {
+            background: linear-gradient(135deg, rgba(2, 62, 138, 0.9), rgba(0, 180, 216, 0.8)), 
+                        url('https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .page-hero h1 { font-size: 2.8rem; color: var(--text-light); margin-bottom: 10px; }
+        .page-hero p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+        /* --- QUIZ CONTAINER --- */
+        .quiz-wrapper {
+            max-width: 800px;
+            margin: -40px auto 60px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 40px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* --- START SCREEN --- */
+        .start-screen h2 { font-size: 2rem; margin-bottom: 20px; }
+        .start-screen p { margin-bottom: 30px; color: #666; }
+        
+        .btn-start {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0,119,182,0.3);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-3px);
+            background: var(--primary-dark);
+            box-shadow: 0 8px 20px rgba(0,119,182,0.4);
+        }
+
+        /* --- QUIZ GAME SCREEN --- */
+        .quiz-game { display: none; }
+
+        .progress-container {
+            width: 100%;
+            background: #eee;
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--secondary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .question-count {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: var(--primary-dark);
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #eee;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+            font-family: inherit;
+            color: var(--text-dark);
+            position: relative;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            border-color: var(--secondary);
+            background: var(--highlight);
+        }
+
+        .option-btn.correct {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .option-btn.wrong {
+            background: var(--error);
+            color: white;
+            border-color: var(--error);
+        }
+
+        .next-btn {
+            margin-top: 30px;
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: none; /* Hidden until answer selected */
+        }
+
+        .next-btn:hover { background: var(--primary); }
+
+        /* --- RESULT SCREEN --- */
+        .result-screen { display: none; }
+        
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            background: var(--highlight);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            border: 5px solid var(--primary);
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .result-message {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .result-desc {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--text-dark);
+            color: var(--text-light);
+            padding: 60px 20px 20px;
+            margin-top: 80px;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-col h4 { color: var(--accent); margin-bottom: 20px; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a:hover { color: var(--secondary); padding-left: 5px; transition: var(--transition); }
+        .social-links a {
+            display: inline-flex; justify-content: center; align-items: center;
+            width: 40px; height: 40px; background: rgba(255,255,255,0.1);
+            border-radius: 50%; margin-right: 10px; transition: var(--transition);
+        }
+        .social-links a:hover { background: var(--secondary); transform: rotate(360deg); }
+        .copyright { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 0.9rem; opacity: 0.7; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: block; }
+            .nav-links {
+                position: absolute; top: 70px; left: 0; width: 100%;
+                background: white; flex-direction: column; padding: 20px;
+                box-shadow: 0 10px 10px rgba(0,0,0,0.05); display: none;
+            }
+            .nav-links.active { display: flex; }
+            .page-hero h1 { font-size: 2rem; }
+            .quiz-card { padding: 25px; }
+            .question-text { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-tint"></i> AquaGuard Kenya
+            </a>
+            <div class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="importance.html">Importance</a></li>
+                    <li><a href="ways.html">Ways to Save</a></li>
+                    <li><a href="quiz.html" style="color:var(--primary);">Quiz</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <h1>Test Your Knowledge</h1>
+        <p>How much do you know about water conservation in Kenya?</p>
+    </section>
+
+    <div class="quiz-wrapper">
+        <div class="quiz-card">
+            
+            <!-- Start Screen -->
+            <div class="start-screen" id="startScreen">
+                <i class="fas fa-brain" style="font-size: 4rem; color: var(--secondary); margin-bottom: 20px;"></i>
+                <h2>Ready to become a Water Expert?</h2>
+                <p>This quiz has 10 questions about water facts, Kenyan geography, and conservation tips. <br>Can you score 10/10?</p>
+                <button class="btn-start" onclick="startQuiz()">Start Quiz</button>
+            </div>
+
+            <!-- Game Screen -->
+            <div class="quiz-game" id="gameScreen">
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="question-count">Question <span id="currentQ">1</span> of <span id="totalQ">10</span></div>
+                <h3 class="question-text" id="questionText">Loading question...</h3>
+                <div class="options-grid" id="optionsContainer">
+                    <!-- Options generated by JS -->
+                </div>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+            </div>
+
+            <!-- Result Screen -->
+            <div class="result-screen" id="resultScreen">
+                <div class="score-circle">
+                    <span class="score-number" id="finalScore">0</span>
+                </div>
+                <h2 class="result-message" id="resultMessage">Well Done!</h2>
+                <p class="result-desc" id="resultDesc">You are on your way to becoming a water hero.</p>
+                <button class="btn-start" onclick="restartQuiz()">Try Again</button>
+                <br><br>
+                <a href="ways.html" style="color: var(--primary); font-weight: 600;">Review Ways to Save &rarr;</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>AquaGuard Kenya</h4>
+                <p>Student-led initiative dedicated to creating a water-secure future for all Kenyan communities through education and action.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="importance.html">Importance</a></li>
+                    <li><a href="ways.html">Ways to Save</a></li>
+                    <li><a href="quiz.html">Take the Quiz</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; <span id="year"></span> AquaGuard Kenya | Created by Rebecca</p> 
+            </p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. Dynamic Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 2. Mobile Menu Toggle
+        function toggleMenu() {
+            const nav = document.getElementById('navLinks');
+            nav.classList.toggle('active');
+        }
+
+        // 3. Quiz Data (Kenyan Context)
+        const questions = [
+            {
+                question: "What percentage of the Earth's water is fresh and available for use?",
+                options: ["50%", "25%", "Less than 3%", "10%"],
+                correct: 2
+            },
+            {
+                question: "Which is the largest lake in Kenya?",
+                options: ["Lake Naivasha", "Lake Victoria", "Lake Turkana", "Lake Nakuru"],
+                correct: 1
+            },
+            {
+                question: "How much water can a dripping tap waste in one day?",
+                options: ["5 Liters", "20+ Liters", "1 Liter", "50 Liters"],
+                correct: 1
+            },
+            {
+                question: "What is the most effective way to save water while brushing teeth?",
+                options: ["Use hot water", "Turn off the tap", "Brush faster", "Use more toothpaste"],
+                correct: 1
+            },
+            {
+                question: "Which sector uses the MOST water globally?",
+                options: ["Industry", "Domestic/Home", "Agriculture", "Energy Production"],
+                correct: 2
+            },
+            {
+                question: "What is 'Rainwater Harvesting'?",
+                options: ["Collecting rain from roofs for use", "Waiting for rain to fall", "Cloud seeding", "Drilling boreholes"],
+                correct: 0
+            },
+            {
+                question: "Why is water conservation important in Arid and Semi-Arid Lands (ASALs) in Kenya?",
+                options: ["It rains too much there", "Water is scarce and precious", "There are no people there", "To make rivers flood"],
+                correct: 1
+            },
+            {
+                question: "What should you do if you see a leaking pipe at school?",
+                options: ["Ignore it", "Play with the water", "Report it to a teacher immediately", "Take a photo"],
+                correct: 2
+            },
+            {
+                question: "Which activity uses the most water in a typical home?",
+                options: ["Cooking", "Flushing the toilet", "Drinking", "Washing hands"],
+                correct: 1
+            },
+            {
+                question: "What date is World Water Day celebrated?",
+                options: ["December 25", "March 22", "June 1", "January 1"],
+                correct: 1
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // DOM Elements
+        const startScreen = document.getElementById('startScreen');
+        const gameScreen = document.getElementById('gameScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const currentQSpan = document.getElementById('currentQ');
+        const totalQSpan = document.getElementById('totalQ');
+
+        function startQuiz() {
+            startScreen.style.display = 'none';
+            gameScreen.style.display = 'block';
+            currentQuestionIndex = 0;
+            score = 0;
+            totalQSpan.textContent = questions.length;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestionIndex];
+            questionText.textContent = q.question;
+            currentQSpan.textContent = currentQuestionIndex + 1;
+            
+            // Update Progress Bar
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            optionsContainer.innerHTML = '';
+            nextBtn.style.display = 'none';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, selectedBtn) {
+            const q = questions[currentQuestionIndex];
+            const buttons = optionsContainer.querySelectorAll('.option-btn');
+
+            // Disable all buttons
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === q.correct) {
+                selectedBtn.classList.add('correct');
+                score++;
+            } else {
+                selectedBtn.classList.add('wrong');
+                // Highlight the correct one
+                buttons[q.correct].classList.add('correct');
+            }
+
+            nextBtn.style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            gameScreen.style.display = 'none';
+            resultScreen.style.display = 'block';
+            
+            const finalScoreEl = document.getElementById('finalScore');
+            const resultMessage = document.getElementById('resultMessage');
+            const resultDesc = document.getElementById('resultDesc');
+
+            // Animate Score
+            let tempScore = 0;
+            const interval = setInterval(() => {
+                finalScoreEl.textContent = tempScore;
+                if (tempScore >= score) clearInterval(interval);
+                tempScore++;
+            }, 100);
+
+            // Custom Messages
+            if (score === 10) {
+                resultMessage.textContent = "Water Warrior! 🏆";
+                resultDesc.textContent = "Perfect score! You are truly an expert on water conservation.";
+            } else if (score >= 7) {
+                resultMessage.textContent = "Great Job! 💧";
+                resultDesc.textContent = "You know your stuff! Keep spreading the word.";
+            } else if (score >= 4) {
+                resultMessage.textContent = "Good Effort! 👍";
+                resultDesc.textContent = "You have some knowledge, but there's more to learn. Check out our 'Ways to Save' page!";
+            } else {
+                resultMessage.textContent = "Keep Learning! 📚";
+                resultDesc.textContent = "Don't worry! Visit our 'Importance' and 'Ways' pages to become an expert.";
+            }
+        }
+
+        function restartQuiz() {
+            resultScreen.style.display = 'none';
+            startScreen.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
